@@ -1,0 +1,13 @@
+input_path: 'data/input/'
+output_path: 'data/input/'
+
+input_genome_name: 'CBS6556GenomewSimplifiedHeaders.fa'
+input_library_name: 'example_test.csv'
+input_guide_col_name: 'sgRNA' #lib3 'guides' #lib2 'sgRNA' #lib1 '20bp_crRNA'
+
+spacer_length: 20
+nt_toward_5_prime: 2
+nt_toward_3_prime: 5  # Including the PAM
+output_context: True
+
+pam_regex_to_look_for: '(?=(GG))'

@@ -1,0 +1,14 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# Platform: Ubuntu 20.04.5 LTS
+name: deepguide_reborn
+dependencies:
+  - python=3.10
+  - tensorflow=2.9.1
+  - pyyaml=6.0
+  - pandas=1.4.3
+  - numpy=1.22.3
+  - scikit-learn=1.1.1
+  - matplotlib=3.5.1
+  - pydot==1.4.2
+  - pydotplus==2.0.2
