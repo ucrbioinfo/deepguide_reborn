@@ -1,6 +1,6 @@
 This is a re-implementation of the original [DeepGuide](https://github.com/dDipankar/DeepGuide) showcased in Baisya, D., Ramesh, A., Schwartz, C. <em>et al.</em> Genome-wide functional screens enable the prediction of high activity CRISPR-Cas9 and -Cas12a guides in <em>Yarrowia lipolytica</em>. Nat Commun 13, 922 (2022). https://doi.org/10.1038/s41467-022-28540-0
 
-This iteration of DeepGuide allows a higher degree of versatility via a configuration file. It also allows pre-training and training the model from scratch by switching modes in config.yaml. Experiments done in our [acCrispr](https://www.biorxiv.org/content/10.1101/2022.07.12.499789v1.full.pdf) were done using this iteration.
+This iteration of DeepGuide allows a higher degree of versatility via a configuration file. It also allows pre-training and training the model from scratch by switching modes in config.yaml. Experiments done in our [acCrispr](https://www.biorxiv.org/content/10.1101/2022.07.12.499789v1.full.pdf) paper were done using this iteration.
 
 
 ## Pre-requisites
