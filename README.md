@@ -11,7 +11,7 @@ DeepGuide Reborn uses the [Decorator](https://refactoring.guru/design-patterns/d
 2. Clone this repository by either clicking on the green Code on the top right and clicking "Download ZIP," or downloading [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and then `$ git clone https://github.com/AmirUCR/deepguide_reborn.git` in your desired directory.
 3. Create a conda environment and let conda install the required packages via the command below. Answer yes to the installation prompt.
 ```
-$ conda create -n deepguide --file requirements.yml
+conda create -n deepguide --file requirements.yml
 ```
 4. Switch to the newly-created environment like so: `conda activate deepguide`
 5. Run the test input like so: `python src/main.py` and check the output in `data/output/example_run/example_test_cas9_seq_dg1_28nt_predicted_scores.csv`
