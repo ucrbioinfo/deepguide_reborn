@@ -28,7 +28,7 @@ class DeepGuideOne(MLModel):
 
     def get_model(self) -> tensorflow.keras.Model:
         ''' 
-        Model conceived by Dipankar Ranjan Baisya https://github.com/dDipankar/DeepGuide
+        Model developed by Dipankar Ranjan Baisya https://github.com/dDipankar/DeepGuide
         Presented in paper https://rdcu.be/cUM5w 
         Genome-wide functional screens enable the prediction of 
         high activity CRISPR-Cas9 and -Cas12a guides in Yarrowia lipolytica.
