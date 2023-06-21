@@ -51,11 +51,10 @@ class MLModel(ABC):
                 sys.exit(1)
 
 
-        if (mode == 'inference' or mode == 'pti' or mode == 'ti') and \
-            os.path.exists(self.inference_output_path):
-            print('Error: Inference output file already exists: {path}'.format(self.inference_output_path))
-            print('Please rename the experiment or make a backup.')
-            sys.exit(1)
+        # if (mode == 'pti' or mode == 'ti') and os.path.exists(self.inference_output_path):
+        #     print('Error: Inference output file already exists: {path}'.format(self.inference_output_path))
+        #     print('Please rename the experiment or make a backup.')
+        #     sys.exit(1)
 
         try:
             os.makedirs(self.exp_model_directory)
@@ -74,7 +73,7 @@ class MLModel(ABC):
     @abstractmethod
     def pretrain(self) -> tensorflow.keras.callbacks.History:
         '''
-        Pretrain a model and returna History object.
+        Pretrain a model and return a History object.
         '''
 
 
