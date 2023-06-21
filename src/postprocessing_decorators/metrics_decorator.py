@@ -23,7 +23,12 @@ class PearsonrCallback(tensorflow.keras.callbacks.Callback):
 
     def on_train_end(self, logs=None) -> None:
         pred_y = self.model.predict(self.valid_x)
-        score = scipy.stats.pearsonr(self.valid_y.flatten(), pred_y.flatten())[0]
+
+        try:
+            score = scipy.stats.pearsonr(self.valid_y.flatten(), pred_y.flatten())[0]
+        except ValueError as e:
+            print(e)
+            return
         
         with open(self.metrics_output_path, 'a') as f:
             output = 'Pearson r for validation split ({n} examples): {score:0.3f}\n'.format(
@@ -48,7 +53,12 @@ class SpearmanrCallback(tensorflow.keras.callbacks.Callback):
 
     def on_train_end(self, logs=None) -> None:
         pred_y = self.model.predict(self.valid_x)
-        score = scipy.stats.spearmanr(self.valid_y.flatten(), pred_y.flatten())[0]
+
+        try:
+            score = scipy.stats.spearmanr(self.valid_y.flatten(), pred_y.flatten())[0]
+        except ValueError as e:
+            print(e)
+            return
         
         with open(self.metrics_output_path, 'a') as f:
             output = 'Spearman r for validation split ({n} examples): {score:0.3f}\n'.format(

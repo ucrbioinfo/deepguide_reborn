@@ -29,8 +29,13 @@ class ROCCurve(tensorflow.keras.callbacks.Callback):
         pred_y = sklearn.preprocessing.binarize(X=pred_y, threshold=self.threshold)
         valid_y = sklearn.preprocessing.binarize(X=self.valid_y, threshold=self.threshold)
 
-        auc = sklearn.metrics.roc_auc_score(valid_y, pred_y)
-        fpr, tpr, _ = sklearn.metrics.roc_curve(valid_y, pred_y)
+        try:
+            auc = sklearn.metrics.roc_auc_score(valid_y, pred_y)
+            fpr, tpr, _ = sklearn.metrics.roc_curve(valid_y, pred_y)
+        except ValueError as e:
+            print(e)
+            return
+
 
         label = 'AUC = {auc:0.3f}'.format(auc=auc)
         matplotlib.pyplot.plot(fpr, tpr, label=label)
