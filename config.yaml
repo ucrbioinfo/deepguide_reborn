@@ -1,4 +1,4 @@
-experiment_name: 'example_run'
+experiment_name: 'example_run_2'
 model: 'dg1'  # Available choices: dg1
 mode: 'ti'  # pretrain, train, inference, pt, pti, ti
 cas: 'cas9_seq'  # cas9_seq
