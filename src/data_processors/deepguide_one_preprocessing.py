@@ -1,4 +1,5 @@
 import os
+import sys
 import numpy
 import pandas
 import argparse
@@ -18,8 +19,14 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
         input_genome_path = os.path.join(self.args.input_directory, self.args.pretrain_genome_input_name)
         output_kmers_path = os.path.join(self.args.output_directory, self.args.experiment_name, 'kmers_from_genome.csv')
 
-        print('Looking for genome in {path}'.format(path=input_genome_path))
-        records = list(SeqIO.parse(input_genome_path, 'fasta'))
+        try:
+            print('Looking for genome in {path}'.format(path=input_genome_path))
+            records = list(SeqIO.parse(input_genome_path, 'fasta'))
+        except FileNotFoundError as e:
+            print(e)
+            sys.exit(1)
+
+    
         print('genome_cutter.py found {n} chromosomes/records.'.format(n=len(records)))
         print('Generating {path}.'.format(path=output_kmers_path))
 
@@ -93,11 +100,32 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
         input_path = os.path.join(self.args.input_directory, self.args.train_guides_csv_file_name)
         
         print('Loading training data from {path}'.format(path=input_path))
-        train_df = pandas.read_csv(input_path).sample(frac=1)  # Shuffles the dataset.
+
+        train_df = None
+        try:
+            train_df = pandas.read_csv(input_path).sample(frac=1)  # Shuffles the dataset.
+        except FileNotFoundError as e:
+            print(e)
+            sys.exit(1)
+
         print('Done.')
 
-        X = train_df[self.args.train_guide_seq_col_name].to_list()
-        Y = train_df[self.args.train_guide_score_col_name].to_list()
+        X = None
+        try:
+            X = train_df[self.args.train_guide_seq_col_name].to_list()
+        except KeyError as e:
+            print(e)
+            print(f'No such column as {self.args.train_guide_seq_col_name} in train csv file. Did you misspell it?')
+            sys.exit(1)
+
+
+        Y = None
+        try:
+            Y = train_df[self.args.train_guide_score_col_name].to_list()
+        except KeyError as e:
+            print(e)
+            print(f'No such column as {self.args.train_guide_score_col_name} in train csv file. Did you misspell it?')
+            sys.exit(1)
 
         X = self.encode_guides(X)
         Y = numpy.asarray(Y).reshape((-1, 1))  # column vector
@@ -125,9 +153,21 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
 
     def preprocess_inference(self) -> dict:
         path = os.path.join(self.args.input_directory, self.args.inference_guides_csv_file_name)
-        df = pandas.read_csv(path)
 
-        test_x_raw = df[self.args.inference_guide_seq_col_name].to_list()
+        df = None
+        try:
+            df = pandas.read_csv(path)
+        except FileNotFoundError as e:
+            print(e)
+            sys.exit(1)
+
+        try:
+            test_x_raw = df[self.args.inference_guide_seq_col_name].to_list()
+        except KeyError as e:
+            print(e)
+            print(f'No such column as {self.args.inference_guide_seq_col_name} in inference csv file. Did you misspell it?')
+            sys.exit(1)
+        
         test_x = self.encode_guides(test_x_raw)
 
         return dict({
