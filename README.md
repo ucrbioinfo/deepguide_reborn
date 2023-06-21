@@ -41,7 +41,7 @@ pip install --upgrade pip
 pip install tensorflow==2.12.*
 ```
 
-7. Exit the current environment and activate it again. This makes the system paths in step 3 to be initialized.
+7. Exit the current environment and activate it again. This makes the system paths in step 5 to be initialized.
 ```
 conda deactivate
 
