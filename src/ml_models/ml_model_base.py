@@ -1,4 +1,5 @@
 import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'  # Disables Tensorflow logging about CPU instructions.
 import sys
 import pandas
 import argparse
