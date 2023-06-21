@@ -9,19 +9,60 @@ DeepGuide Reborn uses the [Decorator](https://refactoring.guru/design-patterns/d
 0. Training DeepGuide is orders of magnitude faster on a machine with an Nvidia GPU. 
 1. DeepGuide is written in Python. To run it, get Anaconda for your specific operating system [https://docs.anaconda.com/anaconda/install/index.html](https://docs.anaconda.com/anaconda/install/index.html)
 2. Clone this repository by either clicking on the green Code on the top right and clicking "Download ZIP," or downloading [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and then `$ git clone https://github.com/AmirUCR/deepguide_reborn.git` in your desired directory.
-3. Create a conda environment and let conda install the required packages via the command below. Answer yes to the installation prompt.
-```
-conda env create -f requirements.yml
-```
-
-Alternatively, run
-```
-conda create -n deepguide python=3.10 tensorflow pyyaml pandas numpy scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
+3. Create a conda environment and activate it.
 
 ```
-4. Switch to the newly-created environment like so: `conda activate deepguide`
-5. Run the test input like so: `python src/main.py` and check the output in `data/output/example_run/example_test_cas9_seq_dg1_28nt_predicted_scores.csv`
-6. Refer to the config.yaml file where each customizable option of DeepGuide Reborn is explained in detail.
+conda create -n deepguide python=3.10 -y
+
+conda activate deepguide
+```
+
+4. Install CUDA and cuDNN with conda and pip.
+```
+conda install -c conda-forge cudatoolkit=11.8.0 -y
+
+pip install nvidia-cudnn-cu11==8.6.0.163
+```
+
+5. Configure the system paths.
+```
+mkdir -p $CONDA_PREFIX/etc/conda/activate.d
+
+echo 'CUDNN_PATH=$(dirname $(python -c "import nvidia.cudnn;print(nvidia.cudnn.__file__)"))' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+
+echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib' >> $CONDA_PREFIX/etc/conda/activate.d/env_vars.sh
+```
+
+6. Upgrade pip and install TF.
+
+```
+pip install --upgrade pip
+
+pip install tensorflow==2.12.*
+```
+
+7. Exit the current environment and activate it again. This makes the system paths in step 3 to be initialized.
+```
+conda deactivate
+
+conda activate deepguide
+```
+
+8. Confirm that TF can see the GPU.
+```
+python3 -c "import tensorflow as tf; print(tf.config.list_physical_devices('GPU'))"
+```
+
+You should see `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU')]` on the last line of the output.
+
+9. Install the rest of the dependencies for DeepGuide.
+
+```
+conda install pyyaml pandas numpy scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
+```
+
+10. Run the test input like so: `python src/main.py` and check the output in `data/output/example_run/example_test_cas9_seq_dg1_28nt_predicted_scores.csv`
+11. Refer to the config.yaml file where each customizable option of DeepGuide Reborn is explained in detail.
 
 ## Citation
 
