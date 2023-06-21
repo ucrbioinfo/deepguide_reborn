@@ -1,80 +1,10 @@
 import sys
-import yaml
-import argparse
 
 from ml_models.ml_model_factory import MlModelFactory
 from data_processors.preprocessing_factory import PreProcessingFactory 
 from postprocessing_decorators.metrics_decorator import MetricsDecorator
 from postprocessing_decorators.plots_and_graphs_decorator import PlotsAndGraphsDecorator
-
-
-def parse_arguments() -> argparse.Namespace:
-    '''
-    Read the values in config.yaml
-    '''
-
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument(
-        '--config', 
-        type=argparse.FileType(mode='r'),
-        default='config.yaml', 
-        help='The config file to use. Default: Must be placed in the root folder.',
-    )
-
-    args = parser.parse_args()
-    arg_dict = vars(args)
-    if args.config:
-        arg_dict.update(yaml.load(args.config, Loader=yaml.FullLoader))
-
-    return args
-
-
-def check_and_summarize_args(args: argparse.Namespace):
-    model_names = dict({
-        'dg1': 'DeepGuide 1 (CAE).',
-    })
-
-    modes = dict({
-        'pretrain': 'Pre-Train',
-        'train': 'Train',
-        'inference': 'Inference',
-        'pt': 'Pre-Train + Train',
-        'ti': 'Train + Inference',
-        'pti': 'Pre-Train + Train + Inference',
-    })
-
-    if args.model not in model_names:
-        print('No model named {model_name}. Please select a valid model in config.yaml.'.format(
-                model_name=args.model,
-        ))
-
-        print('Valid models are: {keys}'.format(keys=list(model_names.keys())))
-        sys.exit(1)
-
-    if args.mode not in modes:
-        print('No mode named {mode}. Please select a valid model in config.yaml.'.format(
-                mode=args.mode,
-        ))
-
-        print('Valid modes are: {keys}'.format(keys=list(modes.keys())))
-        sys.exit(1)
-    
-    print()
-    print('DeepGuide Overview:')
-    print('-Experiment name: {name}.'.format(name=args.experiment_name))
-    print('-Model: {model}'.format(model=model_names[args.model]))
-    print('-Running in {mode} mode.'.format(mode=modes[args.mode]))
-    print('-Cas mode: {mode}.'.format(mode=args.cas))
-    print('-Using guides with length {length}.'.format(length=args.guide_length))
-    
-    if args.mode == 'dg1':
-        print('Pre-Train genome input path: {path}'.format(
-            path=args.input_path + args.pretrain_genome_input_name
-            )
-        )
-
-    print()
+from utils.configurator import parse_arguments, check_and_summarize_args
 
 
 def main() -> int:
@@ -125,7 +55,6 @@ def main() -> int:
             stack.pretraining_data = preprocessor.preprocess_pretrain()
             stack.training_data = preprocessor.preprocess_train()
             stack.inference_data = preprocessor.preprocess_inference()
-
 
             stack.pretrain()
             stack.train()
