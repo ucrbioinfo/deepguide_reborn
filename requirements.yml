@@ -1,7 +1,11 @@
 # This file may be used to create an environment using:
-# $ conda create --name <env> --file <this file>
+# $ conda env create -f requirements.yml
 # Platform: Ubuntu 20.04.5 LTS
-name: deepguide_reborn
+# Alternatively
+# conda create -n deepguide python=3.10 tensorflow pyyaml pandas numpy scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
+#
+name: deepguide
+
 dependencies:
   - python=3.10
   - tensorflow=2.9.1
@@ -10,5 +14,6 @@ dependencies:
   - numpy=1.22.3
   - scikit-learn=1.1.1
   - matplotlib=3.5.1
-  - pydot==1.4.2
-  - pydotplus==2.0.2
+  - pydot=1.4.2
+  - pydotplus=2.0.2
+  - biopython=1.78
