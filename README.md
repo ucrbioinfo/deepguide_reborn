@@ -9,7 +9,7 @@ DeepGuide Reborn uses the [Decorator](https://refactoring.guru/design-patterns/d
 0. Training DeepGuide is orders of magnitude faster on a machine with an Nvidia GPU. 
 1. DeepGuide is written in Python. To run it, get Miniconda for your specific operating system [https://docs.conda.io/en/main/miniconda.html](https://docs.conda.io/en/main/miniconda.html)
 2. Clone this repository by either clicking on the green Code on the top right and clicking "Download ZIP," or downloading [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) and then `$ git clone https://github.com/AmirUCR/deepguide_reborn.git` in your desired directory.
-3. Create a conda environment and activate it.
+3. These installation instructions are for Ubuntu 20.04.6 LTS. Create a conda environment and activate it.
 
 ```
 conda create -n deepguide python=3.10 -y
