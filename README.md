@@ -3,8 +3,6 @@ This is a re-implementation of the original [DeepGuide](https://github.com/dDipa
 
 This iteration of DeepGuide allows a higher degree of versatility via a configuration file. It also allows pre-training and training the model from scratch by switching modes in config.yaml. Experiments done in our [acCRISPR](https://www.biorxiv.org/content/10.1101/2022.07.12.499789v1.full.pdf) paper were performed using this iteration.
 
-DeepGuide Reborn uses the [Decorator](https://refactoring.guru/design-patterns/decorator) and [Factory](https://refactoring.guru/design-patterns/factory-method) design patterns to manage data preprocessing, machine learning model creation, and output post-processing (such as calculating correlation coefficients and drawing graphs). Extending DeepGuide's functionality is streamlined.
-
 ## Pre-requisites
 0. Training DeepGuide is orders of magnitude faster on a machine with an Nvidia GPU. 
 1. DeepGuide is written in Python. To run it, get Miniconda for your specific operating system [https://docs.conda.io/en/main/miniconda.html](https://docs.conda.io/en/main/miniconda.html)
