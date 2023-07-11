@@ -1,6 +1,6 @@
-experiment_name: 'example_run_2'
+experiment_name: 'yali_cas9'
 model: 'dg1'  # Available choices: dg1
-mode: 'ti'  # pretrain, train, inference, pt, pti, ti
+mode: 'train'  # pretrain, train, inference, pt, pti, ti
 cas: 'cas9_seq'  # cas9_seq
 
 guide_length: 28  # Default 28
@@ -9,9 +9,9 @@ guide_length: 28  # Default 28
 # Place in the input directory.
 pretrain_genome_input_name: 'CBS6556GenomewSimplifiedHeaders.fa'
 
-train_guides_csv_file_name: 'example_train.csv'  # Must be a .csv
+train_guides_csv_file_name: 'yali_cas9_context_data_yeast_grp3.csv'  # Must be a .csv
 train_guide_seq_col_name: 'guide_with_context'  # The name of the column in the training set that contains the guides with flanking context base pairs
-train_guide_score_col_name: '30dC_2%_glucose_CS_day2_normalized_by_NT_avg'  # The name of the column in the training set that contains the true experimental scores
+train_guide_score_col_name: 'Cutting Score'  # The name of the column in the training set that contains the true experimental scores
 
 inference_guides_csv_file_name: 'example_test.csv'
 inference_guide_seq_col_name: 'guide_with_context'

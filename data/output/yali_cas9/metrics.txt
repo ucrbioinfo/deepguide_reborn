@@ -1,0 +1,3 @@
+AUC-ROC for validation split (13393 examples): 0.500
+Pearson r for validation split (13393 examples): 0.416
+Spearman r for validation split (13393 examples): 0.356
