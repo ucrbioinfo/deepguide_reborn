@@ -74,11 +74,14 @@ class DeepGuideOne(MLModel):
             optimizer=tensorflow.keras.optimizers.Adam(learning_rate=self.args.dg_one_adam_lr)
         )
 
+        print(f'Pretraining auto-encoder with batch size {self.args.dg_one_pretrain_batch_size}.')
+        print(f'Pretraining auto-encoder with {self.args.dg_one_pretrain_epochs} epochs.')
+
         history = auto_encoder.fit(
             x=data_dict['train_x'],
             y=data_dict['train_x'],
-            batch_size=64,
-            epochs=6,
+            batch_size=self.args.dg_one_pretrain_batch_size,
+            epochs=self.args.dg_one_pretrain_epochs,
             shuffle=True,
             validation_data=(data_dict['valid_x'], data_dict['valid_x']),
         )

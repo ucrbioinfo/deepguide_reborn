@@ -22,14 +22,19 @@ inference_guide_seq_col_name: 'guide_with_context'
 plot_model: False
 
 # ----------------------
-metrics: True  # Switch to True for large enough data -- Won't work with examples
-plot_auc_curve: True  # Switch to True for large enough data -- Won't work with examples
+metrics: False  # Switch to True for large enough data -- Won't work with examples
+plot_auc_curve: False  # Switch to True for large enough data -- Won't work with examples
 # ----------------------
 
 # DG1 HYPERPARAMETERS
 dg_one_pretrain_train_test_ratio: 0.7  # Default: 0.7 Means 70% of data used for training and 30% for validation.
 dg_one_train_test_ratio: 0.7  # Default: 0.7
-dg_one_adam_lr: 0.003  # Default 0.001
-dg_one_roc_curve_threshold: 3
-dg_one_batch_size: 64
-dg_one_epochs: 10
+
+dg_one_adam_lr: 0.003  # Default 0.001 - Used for both pretrain and train models
+dg_one_roc_curve_threshold: 3  # Default 3
+
+dg_one_pretrain_batch_size: 32  # Default 64
+dg_one_batch_size: 64  # Default 64
+
+dg_one_pretrain_epochs: 6  # Default 6
+dg_one_epochs: 10  # Default 10
