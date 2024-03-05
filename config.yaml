@@ -1,4 +1,4 @@
-experiment_name: 'yali_cas9'
+experiment_name: 'test_yali_cas9'
 model: 'dg1'  # Available choices: dg1
 mode: 'train'  # pretrain, train, inference, pt, pti, ti
 cas: 'cas9_seq'  # cas9_seq
