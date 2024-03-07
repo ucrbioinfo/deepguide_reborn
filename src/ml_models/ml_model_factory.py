@@ -3,7 +3,6 @@ import argparse
 from ml_models.ml_model_base import MLModel
 from ml_models.deepguide_one import DeepGuideOne
 
-
 class MlModelFactory:
     def __init__(self, args: argparse.Namespace) -> None:
         self.args = args
