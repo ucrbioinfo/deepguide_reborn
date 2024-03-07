@@ -77,6 +77,7 @@ class DeepGuideOne(MLModel):
         print(f'Pretraining auto-encoder with batch size {self.args.dg_one_pretrain_batch_size}.')
         print(f'Pretraining auto-encoder with {self.args.dg_one_pretrain_epochs} epochs.')
 
+        # Prevent loading the entire data onto the GPU
         with tensorflow.device("CPU"):
             train_dataset = tensorflow.data.Dataset.from_tensor_slices((data_dict['train_x'], data_dict['train_x']))
             train_dataset = train_dataset.shuffle(buffer_size=10000).batch(self.args.dg_one_pretrain_batch_size)
