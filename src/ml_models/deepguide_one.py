@@ -77,14 +77,23 @@ class DeepGuideOne(MLModel):
         print(f'Pretraining auto-encoder with batch size {self.args.dg_one_pretrain_batch_size}.')
         print(f'Pretraining auto-encoder with {self.args.dg_one_pretrain_epochs} epochs.')
 
-        history = auto_encoder.fit(
-            x=data_dict['train_x'],
-            y=data_dict['train_x'],
-            batch_size=self.args.dg_one_pretrain_batch_size,
-            epochs=self.args.dg_one_pretrain_epochs,
-            shuffle=True,
-            validation_data=(data_dict['valid_x'], data_dict['valid_x']),
-        )
+        with tensorflow.device("CPU"):
+            train_dataset = tensorflow.data.Dataset.from_tensor_slices((data_dict['train_x'], data_dict['train_x']))
+            train_dataset = train_dataset.shuffle(buffer_size=10000).batch(self.args.dg_one_pretrain_batch_size)
+
+            valid_dataset = tensorflow.data.Dataset.from_tensor_slices((data_dict['valid_x'], data_dict['valid_x']))
+            valid_dataset = valid_dataset.batch(self.args.dg_one_pretrain_batch_size)
+
+            # Prefetch to improve performance
+            train_dataset = train_dataset.prefetch(tensorflow.data.AUTOTUNE)
+            valid_dataset = valid_dataset.prefetch(tensorflow.data.AUTOTUNE)
+
+        with tensorflow.device("GPU"):
+            history = auto_encoder.fit(
+                train_dataset,
+                epochs=self.args.dg_one_pretrain_epochs,
+                validation_data=valid_dataset,
+            )
 
         print('Saving pretrained model to {path}'.format(path=self.pretrain_model_path))
         auto_encoder.save(self.pretrain_model_path)
