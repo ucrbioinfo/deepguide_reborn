@@ -107,15 +107,6 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
         except FileNotFoundError as e:
             print(e)
             sys.exit(1)
-
-        nu_list = list()
-        if 'nucleosome' in self.args.cas:
-            try:
-                nu_list = train_df[self.args.train_nucleosome_occupancy_col_name].tolist()
-                print(f'Loaded nucleosome occupancy data from {self.args.train_nucleosome_occupancy_col_name}.')
-            except KeyError as e:
-                print(f'Training nucleosome occupancy column {self.args.train_nucleosome_occupancy_col_name} not found. Exiting.')
-                sys.exit(1)
             
         print('Done.')
 
@@ -134,6 +125,15 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
             print(e)
             print(f'No such column as {self.args.train_guide_score_col_name} in train csv file. Did you misspell it?')
             sys.exit(1)
+
+        nu_list = [1] * len(X)
+        if 'nucleosome' in self.args.cas:
+            try:
+                nu_list = train_df[self.args.train_nucleosome_occupancy_col_name].tolist()
+                print(f'Loaded nucleosome occupancy data from {self.args.train_nucleosome_occupancy_col_name}.')
+            except KeyError as e:
+                print(f'Training nucleosome occupancy column {self.args.train_nucleosome_occupancy_col_name} not found. Exiting.')
+                sys.exit(1)
 
         X = self.encode_guides(X)
         Y = numpy.asarray(Y).reshape((-1, 1))  # column vector
