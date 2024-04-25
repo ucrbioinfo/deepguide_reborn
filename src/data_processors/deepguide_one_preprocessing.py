@@ -99,7 +99,7 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
     def preprocess_train(self) -> dict:
         input_path = os.path.join(self.args.input_directory, self.args.train_guides_csv_file_name)
         
-        print('Loading training data from {path}'.format(path=input_path))
+        print(f'Loading training data from {input_path}')
 
         train_df = None
         try:
@@ -108,6 +108,15 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
             print(e)
             sys.exit(1)
 
+        nu_list = list()
+        if 'nucleosome' in self.args.cas:
+            try:
+                nu_list = train_df[self.args.train_nucleosome_occupancy_col_name].tolist()
+                print(f'Loaded nucleosome occupancy data from {self.args.train_nucleosome_occupancy_col_name}.')
+            except KeyError as e:
+                print(f'Training nucleosome occupancy column {self.args.train_nucleosome_occupancy_col_name} not found. Exiting.')
+                sys.exit(1)
+            
         print('Done.')
 
         X = None
@@ -117,7 +126,6 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
             print(e)
             print(f'No such column as {self.args.train_guide_seq_col_name} in train csv file. Did you misspell it?')
             sys.exit(1)
-
 
         Y = None
         try:
@@ -129,13 +137,14 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
 
         X = self.encode_guides(X)
         Y = numpy.asarray(Y).reshape((-1, 1))  # column vector
+        NU = numpy.array(nu_list)
 
-        # TODO No NU SUPPORT YET
-        train_x, valid_x, train_y, valid_y = train_test_split(
-            X,
-            Y,
-            train_size=self.args.dg_one_train_test_ratio,
-        )
+        (train_x, valid_x,
+         train_nu, valid_nu,
+         train_y, valid_y) = train_test_split(X,
+                                               NU, 
+                                               Y, 
+                                               train_size=self.args.dg_one_train_test_ratio)
 
         print('Training DeepGuide 1 on {train_n} and validating on {valid_n} examples. Ratio: {ratio}.'.format(
             train_n=len(train_x),
@@ -145,8 +154,10 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
 
         return dict({
             'train_x': train_x,
+            'train_nu': train_nu,
             'train_y': train_y,
             'valid_x': valid_x,
+            'valid_nu': valid_nu,
             'valid_y': valid_y,
         })
 
@@ -154,23 +165,34 @@ class DeepGuideOnePreprocessing(PreprocessingBase):
     def preprocess_inference(self) -> dict:
         path = os.path.join(self.args.input_directory, self.args.inference_guides_csv_file_name)
 
-        df = None
+        test_df = None
         try:
-            df = pandas.read_csv(path)
+            test_df = pandas.read_csv(path)
         except FileNotFoundError as e:
             print(e)
             sys.exit(1)
 
         try:
-            test_x_raw = df[self.args.inference_guide_seq_col_name].to_list()
+            test_x_raw = test_df[self.args.inference_guide_seq_col_name].to_list()
         except KeyError as e:
             print(e)
             print(f'No such column as {self.args.inference_guide_seq_col_name} in inference csv file. Did you misspell it?')
             sys.exit(1)
         
+        nu_list = list()
+        if 'nucleosome' in self.args.cas:
+            try:
+                nu_list = test_df[self.args.inference_nucleosome_occupancy_col_name]
+                print(f'Loaded nucleosome occupancy data from {self.args.inference_nucleosome_occupancy_col_name}.')
+            except KeyError as e:
+                print(f'No such column as {self.args.inference_nucleosome_occupancy_col_name} in inference csv file. Did you misspell it?. Exiting.')
+                sys.exit(1)
+        
         test_x = self.encode_guides(test_x_raw)
 
         return dict({
             'test_x': test_x,
+            'test_nu': nu_list,
             'guides': test_x_raw,
         })
+    

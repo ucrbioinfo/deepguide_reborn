@@ -1,3 +1,4 @@
+import sys
 import pandas
 import argparse
 import tensorflow
@@ -55,6 +56,10 @@ class DeepGuideOne(MLModel):
 
 
     def pretrain(self) -> tensorflow.keras.callbacks.History:
+        if self.args.mode == 'pretrain' or self.args.mode == 'pt' or self.args.mode == 'pti' and 'nucleosome' in self.args.cas:
+            print('Cannot use pretraining in combination with cas9_nucleosome.')
+            sys.exit(1)
+
         print('Pretraining DeepGuide 1...')
         data_dict = self.pretraining_data
         assert(len(data_dict) > 0)
@@ -125,8 +130,16 @@ class DeepGuideOne(MLModel):
         fc = tensorflow.keras.layers.Dropout(rate=0.5)(flatten)
         fc = tensorflow.keras.layers.Dense(units=80, activation='relu', kernel_initializer='glorot_uniform')(fc)
         fc = tensorflow.keras.layers.Dropout(rate=0.5)(fc)
-        output = tensorflow.keras.layers.Dense(units=1, activation='linear')(fc) 
-        model = tensorflow.keras.Model(inputs=auto_encoder.input, outputs=output)
+
+        if 'nucleosome' not in self.args.cas:
+            output = tensorflow.keras.layers.Dense(units=1, activation='linear')(fc)
+            model = tensorflow.keras.Model(inputs=auto_encoder.input, outputs=output)
+        else:
+            NU = tensorflow.keras.Input(shape=(1,), name='nucleosome_input')
+            dense_nu = tensorflow.keras.layers.Dense(units=80, activation='relu', kernel_initializer='glorot_uniform')(NU)
+            fc = tensorflow.keras.layers.Multiply()([fc, dense_nu])
+            output = tensorflow.keras.layers.Dense(units=1, activation='linear')(fc)
+            model = tensorflow.keras.Model(inputs=[auto_encoder.input, NU], outputs=output)
         
         model.summary()
         
@@ -142,13 +155,20 @@ class DeepGuideOne(MLModel):
             optimizer=tensorflow.keras.optimizers.Adam(self.args.dg_one_adam_lr),
         )
 
+        if 'nucleosome' in self.args.cas:
+            x = {'encoder_input': data_dict['train_x'], 'nucleosome_input': data_dict['train_nu']}
+            validation_data=([data_dict['valid_x'], data_dict['valid_nu']], data_dict['valid_y'])
+        else:
+            x = {'encoder_input': data_dict['train_x'],}
+            validation_data=(data_dict['valid_x'], data_dict['valid_y'])
+
         history = model.fit(
-            x=data_dict['train_x'],
+            x=x,
             y=data_dict['train_y'],
             batch_size=self.args.dg_one_batch_size,
             epochs=self.args.dg_one_epochs,
             shuffle=True,
-            validation_data=(data_dict['valid_x'], data_dict['valid_y']),
+            validation_data=validation_data,
             callbacks=self.callbacks,
         )
 
@@ -176,17 +196,22 @@ class DeepGuideOne(MLModel):
                 show_shapes=True,
             )
 
-        print('Inference with trained weights {path}'.format(path=self.train_weights_path))
+        print(f'Inference with trained weights {self.train_weights_path}')
         model.load_weights(self.train_weights_path)
 
-        pred_y = model.predict(data_dict['test_x']).flatten()
+        if 'nucleosome' in self.args.cas:
+            pred_y = model.predict([data_dict['test_x'], data_dict['test_nu']]).flatten()
+        else:
+            pred_y = model.predict(data_dict['test_x']).flatten()
 
         output_dataframe = pandas.DataFrame({
             'guide_with_context': data_dict['guides'],
             'predicted_dg1_score': pred_y,
         })
 
+        print(self.inference_output_path)
+
         output_dataframe.to_csv(self.inference_output_path, index=False)
-        print('Saved predictions to {path}'.format(path=self.inference_output_path))
+        print(f'Saved predictions to {self.inference_output_path}')
         
         return output_dataframe

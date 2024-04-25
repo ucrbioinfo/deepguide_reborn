@@ -25,8 +25,8 @@ class MLModel(ABC):
         self.pretrain_weights_path = os.path.join(self.exp_weights_directory, self.args.cas + '_' + self.args.model + '_' + str(self.args.guide_length) + 'nt_pretrain_weights.h5')
         self.train_model_path = os.path.join(self.exp_model_directory, self.args.cas + '_' + self.args.model + '_' + str(self.args.guide_length) + 'nt_train_model.h5')
         self.train_weights_path = os.path.join(self.exp_weights_directory, self.args.cas + '_' + self.args.model + '_' + str(self.args.guide_length) + 'nt_train_weights.h5')
-
-        lib_name = self.args.inference_guides_csv_file_name.split('.csv')[0]
+        
+        lib_name = os.path.splitext(os.path.basename(self.args.inference_guides_csv_file_name))[0]
         self.inference_output_path = os.path.join(self.exp_directory, lib_name + '_' + self.args.cas + '_' + self.args.model + '_' + str(self.args.guide_length) + 'nt_predicted_scores.csv')
 
         mode = self.args.mode
