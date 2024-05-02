@@ -37,6 +37,8 @@ echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
 pip install --upgrade pip
 
 pip install tensorflow==2.12.0
+
+conda install tensorflow-base==2.12.0
 ```
 
 7. Exit the current environment and activate it again. This makes the system paths in step 5 to be initialized.
