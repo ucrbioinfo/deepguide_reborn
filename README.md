@@ -56,7 +56,7 @@ You should see `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU'
 9. Install the rest of the dependencies for DeepGuide.
 
 ```
-conda install pyyaml pandas==2.0.2 numpy==1.23.5 scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
+conda install pyyaml pandas==2.0.2 scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
 ```
 
 10. Run the test input like so: `python src/main.py` and check the output in `data/output/example_run/example_test_cas9_seq_dg1_28nt_predicted_scores.csv`
