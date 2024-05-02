@@ -56,10 +56,6 @@ class DeepGuideOne(MLModel):
 
 
     def pretrain(self) -> tensorflow.keras.callbacks.History:
-        if self.args.mode == 'pretrain' or self.args.mode == 'pt' or self.args.mode == 'pti' and 'nucleosome' in self.args.cas:
-            print('Cannot use pretraining in combination with cas9_nucleosome.')
-            sys.exit(1)
-
         print('Pretraining DeepGuide 1...')
         data_dict = self.pretraining_data
         assert(len(data_dict) > 0)
