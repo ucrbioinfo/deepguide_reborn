@@ -36,7 +36,9 @@ echo 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$CONDA_PREFIX/lib/:$CUDNN_PATH/lib
 ```
 pip install --upgrade pip
 
-pip install tensorflow==2.12.*
+pip install tensorflow==2.12.0
+
+conda install tensorflow-base==2.12.0
 ```
 
 7. Exit the current environment and activate it again. This makes the system paths in step 5 to be initialized.
@@ -56,7 +58,7 @@ You should see `[PhysicalDevice(name='/physical_device:GPU:0', device_type='GPU'
 9. Install the rest of the dependencies for DeepGuide.
 
 ```
-conda install pyyaml pandas numpy scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
+conda install pyyaml pandas==2.0.2 scikit-learn matplotlib pydot pydotplus biopython -c conda-forge -y
 ```
 
 10. Run the test input like so: `python src/main.py` and check the output in `data/output/example_run/example_test_cas9_seq_dg1_28nt_predicted_scores.csv`
