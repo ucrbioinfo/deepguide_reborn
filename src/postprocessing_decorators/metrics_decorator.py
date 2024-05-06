@@ -24,9 +24,6 @@ class PearsonrCallback(tensorflow.keras.callbacks.Callback):
     def on_train_end(self, logs=None) -> None:
         pred_y = self.model.predict(self.valid_x)
 
-        print(self.valid_y)
-        print(pred_y)
-
         try:
             score = scipy.stats.pearsonr(self.valid_y.flatten(), pred_y.flatten())[0]
         except ValueError as e:
