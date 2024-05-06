@@ -9,7 +9,7 @@ from postprocessing_decorators.postprocessing_decorator_base import Postprocessi
 
 
 class PearsonrCallback(tensorflow.keras.callbacks.Callback):
-    def __init__(self, valid_x, valid_y, output_directory: str) -> None:
+    def __init__(self, output_directory: str, valid_x, valid_y) -> None:
         super().__init__()
 
         self.valid_x = valid_x
@@ -23,6 +23,9 @@ class PearsonrCallback(tensorflow.keras.callbacks.Callback):
 
     def on_train_end(self, logs=None) -> None:
         pred_y = self.model.predict(self.valid_x)
+
+        print(self.valid_y)
+        print(pred_y)
 
         try:
             score = scipy.stats.pearsonr(self.valid_y.flatten(), pred_y.flatten())[0]
@@ -39,7 +42,7 @@ class PearsonrCallback(tensorflow.keras.callbacks.Callback):
 
 
 class SpearmanrCallback(tensorflow.keras.callbacks.Callback):
-    def __init__(self, valid_x, valid_y, output_directory: str) -> None:
+    def __init__(self, output_directory: str, valid_x, valid_y) -> None:
         super().__init__()
 
         self.valid_x = valid_x
@@ -104,17 +107,25 @@ class MetricsDecorator(PostprocessingDecoratorBase):
             self.args.experiment_name,
             '',
         )
+    
+        if 'nucleosome' in self.args.cas:
+            valid_x = [self.decorated_ml_model.training_data['valid_x'], 
+                       self.decorated_ml_model.training_data['valid_nu']]
+        else:
+            valid_x = self.decorated_ml_model.training_data['valid_x']
+
+        valid_y = self.decorated_ml_model.training_data['valid_y']
         
         pearsonr_callback = PearsonrCallback(
-            valid_x=self.decorated_ml_model.training_data['valid_x'],
-            valid_y=self.decorated_ml_model.training_data['valid_y'],
             output_directory=output_directory,
+            valid_x=valid_x,
+            valid_y=valid_y
         )
 
         spearmanr_callback = SpearmanrCallback(
-            valid_x=self.decorated_ml_model.training_data['valid_x'],
-            valid_y=self.decorated_ml_model.training_data['valid_y'],
             output_directory=output_directory,
+            valid_x=valid_x,
+            valid_y=valid_y,
         )
 
         self.decorated_ml_model.callbacks.append(pearsonr_callback)
